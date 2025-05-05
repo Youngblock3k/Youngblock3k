@@ -1,5 +1,5 @@
 - 👋 Hi, I’m @Youngblock3k
-- 👀 I’m interested inc coding
+- 👀 I’m interested in coding
 - 🌱 I’m currently learning java
 - 💞️ I’m looking to collaborate on none!
 - 📫 How to reach me : Youngblock2kus@gmail.com
