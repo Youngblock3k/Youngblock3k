@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initCounters();
     initMobileMenu();
     initSectionAnimations();
+    initCodeHighlighting();
+    initFloatingElements();
     
     // Set active section based on hash
     if (window.location.hash) {
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Navigation
+// Navigation Functions
 function initNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
     
@@ -24,42 +26,35 @@ function initNavigation() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const sectionId = this.getAttribute('href').substring(1);
-            
-            // Update active nav link
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Show section
-            showSection(sectionId);
-            
-            // Update URL
-            history.pushState(null, null, `#${sectionId}`);
-            
-            // Close mobile menu if open
-            const navMenu = document.querySelector('.nav-menu');
-            const navToggle = document.querySelector('.nav-toggle');
-            if (navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                navToggle.classList.remove('active');
-            }
+            handleNavClick(sectionId, e);
         });
     });
 }
 
-// Mobile Menu Toggle
-function initMobileMenu() {
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
+function handleNavClick(sectionId, event) {
+    if (event) event.preventDefault();
     
-    if (navToggle) {
-        navToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            this.classList.toggle('active');
-        });
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    // Update active nav link
+    navLinks.forEach(l => l.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Show section
+    showSection(sectionId);
+    
+    // Update URL
+    history.pushState(null, null, `#${sectionId}`);
+    
+    // Close mobile menu if open
+    const navMenu = document.querySelector('.nav-menu');
+    const navToggle = document.querySelector('.nav-toggle');
+    if (navMenu.classList.contains('active')) {
+        navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
     }
 }
 
-// Show Section
 function showSection(sectionId) {
     // Hide all sections
     document.querySelectorAll('.section').forEach(section => {
@@ -73,13 +68,26 @@ function showSection(sectionId) {
         
         // Scroll to top of section
         window.scrollTo({
-            top: 0,
+            top: targetSection.offsetTop - 80,
             behavior: 'smooth'
         });
     }
 }
 
-// Smooth Scrolling for Anchor Links
+// Mobile Menu
+function initMobileMenu() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navToggle) {
+        navToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            this.classList.toggle('active');
+        });
+    }
+}
+
+// Smooth Scrolling
 function initSmoothScrolling() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -98,7 +106,7 @@ function initSmoothScrolling() {
     });
 }
 
-// Animated Skill Bars
+// Skill Bars Animation
 function initSkillBars() {
     const skillCards = document.querySelectorAll('.skill-card');
     
@@ -112,7 +120,9 @@ function initSkillBars() {
                 // Animate progress bar
                 setTimeout(() => {
                     progressBar.style.width = `${skillPercent}%`;
-                    percentText.textContent = `${skillPercent}%`;
+                    if (percentText) {
+                        percentText.textContent = `${skillPercent}%`;
+                    }
                 }, 300);
                 
                 observer.unobserve(entry.target);
@@ -125,15 +135,15 @@ function initSkillBars() {
     skillCards.forEach(card => observer.observe(card));
 }
 
-// Experience Counter Animation
+// Experience Counter
 function initCounters() {
     const expCounter = document.querySelector('.exp-counter');
     if (!expCounter) return;
     
     const targetCount = parseInt(expCounter.getAttribute('data-count'));
     let currentCount = 0;
-    const duration = 2000; // 2 seconds
-    const increment = targetCount / (duration / 16); // 60fps
+    const duration = 2000;
+    const increment = targetCount / (duration / 16);
     
     const updateCounter = () => {
         currentCount += increment;
@@ -145,7 +155,6 @@ function initCounters() {
         }
     };
     
-    // Start counter when section is visible
     const observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
             updateCounter();
@@ -186,29 +195,29 @@ function initContactForm() {
     });
 }
 
-// Back to Top Button
+// Back to Top
 function initBackToTop() {
     const backToTopBtn = document.querySelector('.back-to-top');
     
     if (backToTopBtn) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
+            if (window.pageYOffset > 300) {
                 backToTopBtn.style.display = 'flex';
             } else {
                 backToTopBtn.style.display = 'none';
             }
         });
-        
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
     }
 }
 
-// Section Entrance Animations
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Section Animations
 function initSectionAnimations() {
     const sections = document.querySelectorAll('.section');
     
@@ -231,117 +240,219 @@ function initSectionAnimations() {
     });
 }
 
-// Interactive Code Window
-document.querySelectorAll('.js-code').forEach(codeBlock => {
-    const keywords = ['const', 'function', 'return'];
-    const strings = ['Youngblock2k', 'Full Stack Developer', 'Clean code & Modern UI', 'Turning ideas into reality', 'Awesome digital experience'];
-    
-    let code = codeBlock.textContent;
-    
-    // Highlight keywords
-    keywords.forEach(keyword => {
-        const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-        code = code.replace(regex, `<span class="js-keyword">${keyword}</span>`);
-    });
-    
-    // Highlight strings
-    strings.forEach(str => {
-        const regex = new RegExp(`"${str}"`, 'g');
-        code = code.replace(regex, `<span class="js-string">"${str}"</span>`);
-    });
-    
-    // Highlight function names
-    code = code.replace(/(\w+)\(/g, '<span class="js-function">$1</span>(');
-    
-    codeBlock.innerHTML = code;
-});
-
-// Typing Effect for Title (Optional)
-function initTypingEffect() {
-    const title = document.querySelector('.title');
-    if (!title) return;
-    
-    const originalText = title.textContent;
-    const words = ['Full Stack Developer', 'Java Specialist', 'Skript Expert', 'Web Developer'];
-    let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    
-    function type() {
-        const currentWord = words[wordIndex];
+// Code Highlighting
+function initCodeHighlighting() {
+    document.querySelectorAll('.js-code').forEach(codeBlock => {
+        const keywords = ['const', 'function', 'return', 'if', 'else', 'for', 'while'];
+        const strings = ['"BGSI Website"', '"Zarnix Bot"', '"CloudNetwork"', '"Egg Database"', '"Pet Values"', '"Probability Calculator"', '"Moderation"', '"Tickets"', '"Utilities"', '"Coming Soon"', '"Custom Plugins"', '"Economy"', '"Unique Features"'];
         
-        if (isDeleting) {
-            title.textContent = currentWord.substring(0, charIndex - 1);
-            charIndex--;
-        } else {
-            title.textContent = currentWord.substring(0, charIndex + 1);
-            charIndex++;
-        }
+        let code = codeBlock.textContent;
         
-        if (!isDeleting && charIndex === currentWord.length) {
-            isDeleting = true;
-            setTimeout(type, 2000);
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length;
-            setTimeout(type, 500);
-        } else {
-            setTimeout(type, isDeleting ? 50 : 100);
-        }
-    }
-    
-    // Start typing effect after a delay
-    setTimeout(type, 1000);
+        // Highlight keywords
+        keywords.forEach(keyword => {
+            const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+            code = code.replace(regex, `<span class="js-keyword">${keyword}</span>`);
+        });
+        
+        // Highlight strings
+        strings.forEach(str => {
+            const regex = new RegExp(str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+            code = code.replace(regex, `<span class="js-string">${str}</span>`);
+        });
+        
+        // Highlight numbers
+        code = code.replace(/(\d+)/g, '<span class="js-number">$1</span>');
+        
+        // Highlight function names
+        code = code.replace(/(\w+)\(/g, '<span class="js-function">$1</span>(');
+        
+        codeBlock.innerHTML = code;
+    });
 }
 
-// Initialize typing effect
-initTypingEffect();
-
-// Particle Effect for Background
-function createParticles() {
-    const container = document.querySelector('.animated-bg');
-    if (!container) return;
+// Run Code Button
+function runCode() {
+    const runBtn = document.querySelector('.run-btn');
+    const originalText = runBtn.textContent;
     
-    for (let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.style.position = 'absolute';
-        particle.style.width = Math.random() * 3 + 1 + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.background = 'rgba(108, 99, 255, 0.3)';
-        particle.style.borderRadius = '50%';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animation = `float ${Math.random() * 10 + 10}s linear infinite`;
-        container.appendChild(particle);
-    }
+    runBtn.textContent = 'Running...';
+    runBtn.disabled = true;
     
-    // Add CSS for floating animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
+    // Simulate code running
+    setTimeout(() => {
+        // Show the contact section (as per the code's function)
+        showSection('contact');
+        
+        // Add success effect
+        runBtn.textContent = 'Success!';
+        runBtn.style.background = 'var(--success)';
+        
+        // Reset after delay
+        setTimeout(() => {
+            runBtn.textContent = originalText;
+            runBtn.style.background = '';
+            runBtn.disabled = false;
+        }, 2000);
+    }, 1000);
 }
 
-// Create particles
-createParticles();
+// Copy to Clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Show success feedback
+        const originalText = event.target.closest('.info-card').querySelector('p').textContent;
+        event.target.closest('.info-card').querySelector('p').textContent = 'Copied!';
+        event.target.closest('.info-card').style.background = 'rgba(54, 211, 153, 0.1)';
+        
+        setTimeout(() => {
+            event.target.closest('.info-card').querySelector('p').textContent = originalText;
+            event.target.closest('.info-card').style.background = '';
+        }, 2000);
+    });
+}
 
-// Add keyboard navigation
+// Project Details Modal
+function showProjectDetails(projectId) {
+    const modal = document.getElementById('projectModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    
+    const projectDetails = {
+        bgsi: {
+            title: 'BGSI - Bubble Gum Simulator Infinity',
+            content: `
+                <h3>Complete Roblox Game Database</h3>
+                <p>This website serves as a comprehensive database for the popular Roblox game "Bubble Gum Simulator Infinity".</p>
+                
+                <h4>Features:</h4>
+                <ul>
+                    <li>Complete egg database with probabilities</li>
+                    <li>Real-time pet value tracking</li>
+                    <li>Game statistics and analytics</li>
+                    <li>Automation tools and macros</li>
+                    <li>Responsive design for all devices</li>
+                </ul>
+                
+                <h4>Technologies Used:</h4>
+                <div class="tech-tags">
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">HTML/CSS</span>
+                    <span class="tag">Roblox API</span>
+                    <span class="tag">Node.js</span>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <a href="https://bgsi.ascyt.com" target="_blank" class="btn primary-btn" style="display: inline-block;">
+                        Visit Website
+                    </a>
+                </div>
+            `
+        },
+        zarnix: {
+            title: 'Zarnix Discord Bot',
+            content: `
+                <h3>Multi-functional Discord Bot</h3>
+                <p>A feature-rich Discord bot designed for gaming communities and server management.</p>
+                
+                <h4>Features:</h4>
+                <ul>
+                    <li>Advanced moderation tools (kick, ban, mute, warn)</li>
+                    <li>Ticket system for user support</li>
+                    <li>Utility commands (weather, time, calculator)</li>
+                    <li>Fun commands and games</li>
+                    <li>Custom command creation</li>
+                    <li>Leveling and economy system</li>
+                </ul>
+                
+                <h4>Technologies Used:</h4>
+                <div class="tech-tags">
+                    <span class="tag">Discord.js</span>
+                    <span class="tag">Node.js</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">MongoDB</span>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <a href="https://discord.gg/GDnvhpea" target="_blank" class="btn primary-btn" style="display: inline-block;">
+                        Join Discord
+                    </a>
+                </div>
+            `
+        },
+        cloudnetwork: {
+            title: 'CloudNetwork Minecraft Server',
+            content: `
+                <h3>Upcoming Minecraft Server</h3>
+                <p>A custom Minecraft server with unique gameplay features and community-focused design.</p>
+                
+                <h4>Planned Features:</h4>
+                <ul>
+                    <li>Custom economy system with unique currencies</li>
+                    <li>Original plugins developed from scratch</li>
+                    <li>Unique gameplay mechanics</li>
+                    <li>Player housing and land claim system</li>
+                    <li>Custom mobs and bosses</li>
+                    <li>Integrated Discord bot for cross-platform features</li>
+                </ul>
+                
+                <h4>Technologies Used:</h4>
+                <div class="tech-tags">
+                    <span class="tag">Java</span>
+                    <span class="tag">Skript</span>
+                    <span class="tag">Spigot API</span>
+                    <span class="tag">MySQL</span>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <a href="https://discord.gg/p8EZa5t4ng" target="_blank" class="btn primary-btn" style="display: inline-block;">
+                        Join Discord for Updates
+                    </a>
+                </div>
+            `
+        }
+    };
+    
+    if (projectDetails[projectId]) {
+        modalTitle.textContent = projectDetails[projectId].title;
+        modalContent.innerHTML = projectDetails[projectId].content;
+        modal.style.display = 'flex';
+    }
+}
+
+function closeModal() {
+    document.getElementById('projectModal').style.display = 'none';
+}
+
+// Invite Bot Function
+function inviteBot() {
+    alert('Bot invite functionality would be added here. For now, join our Discord server!');
+    window.open('https://discord.gg/GDnvhpea', '_blank');
+}
+
+// Floating Elements Animation
+function initFloatingElements() {
+    // Add floating animation to elements with the class
+    const floatElements = document.querySelectorAll('.floating-element');
+    floatElements.forEach((el, index) => {
+        el.style.animationDelay = `${index * 0.5}s`;
+    });
+}
+
+// Download Resume (placeholder)
+function downloadResume() {
+    alert('Resume download functionality would be added here. For now, please contact me directly!');
+    showSection('contact');
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('projectModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+
+// Keyboard Navigation
 document.addEventListener('keydown', (e) => {
     const sections = ['home', 'about', 'skills', 'projects', 'contact'];
     const currentHash = window.location.hash.substring(1);
@@ -357,48 +468,39 @@ document.addEventListener('keydown', (e) => {
         const prevIndex = currentIndex > 0 ? currentIndex - 1 : sections.length - 1;
         const prevSection = sections[prevIndex];
         document.querySelector(`[href="#${prevSection}"]`).click();
+    } else if (e.key === 'Escape') {
+        closeModal();
     }
 });
 
-// Add theme toggle (optional)
-function initThemeToggle() {
-    const themeToggle = document.createElement('button');
-    themeToggle.className = 'theme-toggle';
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-    themeToggle.style.position = 'fixed';
-    themeToggle.style.top = '1rem';
-    themeToggle.style.right = '1rem';
-    themeToggle.style.zIndex = '1000';
-    themeToggle.style.background = 'var(--primary)';
-    themeToggle.style.color = 'white';
-    themeToggle.style.border = 'none';
-    themeToggle.style.borderRadius = '50%';
-    themeToggle.style.width = '40px';
-    themeToggle.style.height = '40px';
-    themeToggle.style.cursor = 'pointer';
-    themeToggle.style.display = 'flex';
-    themeToggle.style.alignItems = 'center';
-    themeToggle.style.justifyContent = 'center';
+// Add CSS for modal tech tags
+const modalStyle = document.createElement('style');
+modalStyle.textContent = `
+    .tech-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+    }
     
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        if (document.body.classList.contains('light-mode')) {
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            document.body.style.setProperty('--dark', '#f5f5f7');
-            document.body.style.setProperty('--darker', '#ffffff');
-            document.body.style.setProperty('--light', '#1a1a2e');
-            document.body.style.setProperty('--gray', '#666666');
-        } else {
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            document.body.style.setProperty('--dark', '#1a1a2e');
-            document.body.style.setProperty('--darker', '#0f0f1a');
-            document.body.style.setProperty('--light', '#f5f5f7');
-            document.body.style.setProperty('--gray', '#8a8aa0');
-        }
-    });
+    .modal-content h3 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
     
-    document.body.appendChild(themeToggle);
-}
-
-// Uncomment to enable theme toggle
-// initThemeToggle();
+    .modal-content h4 {
+        color: var(--light);
+        margin: 1.5rem 0 0.5rem 0;
+    }
+    
+    .modal-content ul {
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .modal-content li {
+        margin-bottom: 0.5rem;
+        color: var(--gray);
+    }
+`;
+document.head.appendChild(modalStyle);
