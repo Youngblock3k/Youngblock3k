@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youngblock2k | Developer Portfolio</title>
+    <title>Youngblock2k | Full Stack Developer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -15,16 +15,16 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <div class="logo" onclick="showSection('home')" style="cursor: pointer;">
                 <span class="logo-text">YB2K</span>
                 <div class="logo-dot"></div>
             </div>
             <ul class="nav-menu">
-                <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
-                <li><a href="#about" class="nav-link" data-section="about">About</a></li>
-                <li><a href="#skills" class="nav-link" data-section="skills">Skills</a></li>
-                <li><a href="#projects" class="nav-link" data-section="projects">Projects</a></li>
-                <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+                <li><a href="#home" class="nav-link active" onclick="handleNavClick('home', event)">Home</a></li>
+                <li><a href="#about" class="nav-link" onclick="handleNavClick('about', event)">About</a></li>
+                <li><a href="#skills" class="nav-link" onclick="handleNavClick('skills', event)">Skills</a></li>
+                <li><a href="#projects" class="nav-link" onclick="handleNavClick('projects', event)">Projects</a></li>
+                <li><a href="#contact" class="nav-link" onclick="handleNavClick('contact', event)">Contact</a></li>
             </ul>
             <div class="nav-toggle">
                 <div class="hamburger"></div>
@@ -46,14 +46,18 @@
                     <p class="description">Crafting digital experiences with code for over <span class="exp-counter" data-count="3">0</span> years. Specializing in Java, JavaScript, Python, and Skript development.</p>
                     
                     <div class="cta-buttons">
-                        <a href="#contact" class="btn primary-btn">
+                        <button class="btn primary-btn" onclick="showSection('contact')">
                             <span>Get In Touch</span>
                             <i class="fas fa-arrow-right"></i>
-                        </a>
-                        <a href="#projects" class="btn secondary-btn">
+                        </button>
+                        <button class="btn secondary-btn" onclick="showSection('projects')">
                             <span>View Projects</span>
                             <i class="fas fa-code"></i>
-                        </a>
+                        </button>
+                        <button class="btn tertiary-btn" onclick="window.open('https://github.com/youngblock2k', '_blank')">
+                            <span>GitHub</span>
+                            <i class="fab fa-github"></i>
+                        </button>
                     </div>
                     
                     <div class="stats">
@@ -62,8 +66,8 @@
                             <div class="stat-label">Years Experience</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-number">50+</div>
-                            <div class="stat-label">Projects</div>
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Major Projects</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-number">5+</div>
@@ -79,22 +83,33 @@
                                 <span class="dot yellow"></span>
                                 <span class="dot green"></span>
                             </div>
-                            <div class="window-title">youngblock2k.js</div>
+                            <div class="window-title">projects.js</div>
                         </div>
                         <div class="window-content">
-                            <pre><code class="js-code">const youngblock2k = {
-    name: "Youngblock2k",
-    role: "Full Stack Developer",
-    experience: "3+ years",
-    languages: ["Java", "JavaScript", "Python", "Skript", "HTML/CSS"],
-    focus: "Clean code & Modern UI",
-    motto: "Turning ideas into reality"
+                            <pre><code class="js-code">const myProjects = {
+    "BGSI Website": {
+        url: "https://bgsi.ascyt.com",
+        tech: ["JavaScript", "HTML/CSS", "Roblox API"],
+        features: ["Egg Database", "Pet Values", "Probability Calculator"]
+    },
+    "Zarnix Bot": {
+        url: "https://discord.gg/GDnvhpea",
+        tech: ["Discord.js", "Node.js", "MongoDB"],
+        features: ["Moderation", "Tickets", "Utilities"]
+    },
+    "CloudNetwork": {
+        status: "Coming Soon",
+        tech: ["Java", "Skript", "Minecraft"],
+        features: ["Custom Plugins", "Economy", "Unique Features"]
+    }
 };
 
-function createProject() {
-    return "Awesome digital experience";
+// Ready to build your project?
+function startProject() {
+    window.location.hash = "#contact";
 }</code></pre>
                         </div>
+                        <button class="run-btn" onclick="runCode()">Run Code</button>
                     </div>
                 </div>
             </div>
@@ -104,50 +119,44 @@ function createProject() {
         <section id="about" class="section">
             <div class="section-header">
                 <h2>About <span class="highlight">Me</span></h2>
-                <p class="section-subtitle">My journey in coding</p>
+                <p class="section-subtitle">My coding journey</p>
             </div>
             <div class="about-container">
                 <div class="about-content">
-                    <p>I've been passionate about coding for over 3 years, starting with simple scripts and evolving into full-stack development. What began as a curiosity has become my career and creative outlet.</p>
+                    <p>I've been coding for 3+ years, starting with Minecraft plugins and evolving into full-stack web development. I love creating tools that solve real problems for gaming communities.</p>
                     
                     <div class="timeline">
                         <div class="timeline-item">
                             <div class="timeline-date">2021</div>
                             <div class="timeline-content">
-                                <h3>Started Coding Journey</h3>
-                                <p>Began with Skript and Minecraft plugins, learning the fundamentals of programming logic.</p>
+                                <h3>Started with Skript</h3>
+                                <p>Began coding with Minecraft Skript, creating custom plugins and learning programming logic.</p>
                             </div>
                         </div>
                         <div class="timeline-item">
                             <div class="timeline-date">2022</div>
                             <div class="timeline-content">
-                                <h3>Expanded to Web Development</h3>
-                                <p>Learned HTML, CSS, JavaScript and started building interactive websites and web applications.</p>
+                                <h3>Web Development</h3>
+                                <p>Learned HTML, CSS, JavaScript and built my first website for the BGSI Roblox game.</p>
                             </div>
                         </div>
                         <div class="timeline-item">
-                            <div class="timeline-date">2023 - Present</div>
+                            <div class="timeline-date">2023</div>
                             <div class="timeline-content">
-                                <h3>Full Stack Development</h3>
-                                <p>Mastered Java, Python, and advanced JavaScript frameworks. Working on complex projects and solutions.</p>
+                                <h3>Discord Bots & APIs</h3>
+                                <p>Created Zarnix Discord bot and worked with various APIs to enhance gaming experiences.</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="about-image">
-                    <div class="image-container">
-                        <div class="floating-shapes">
-                            <div class="shape shape-1"></div>
-                            <div class="shape shape-2"></div>
-                            <div class="shape shape-3"></div>
+                    <div class="dev-card floating-element">
+                        <div class="dev-icon">
+                            <i class="fas fa-gamepad"></i>
                         </div>
-                        <div class="dev-card">
-                            <div class="dev-icon">
-                                <i class="fas fa-laptop-code"></i>
-                            </div>
-                            <h3>Always Learning</h3>
-                            <p>Constantly exploring new technologies and improving my skills</p>
-                        </div>
+                        <h3>Gaming-Focused Developer</h3>
+                        <p>Specializing in tools and websites for gaming communities</p>
+                        <button class="btn small-btn" onclick="showSection('projects')">See Projects</button>
                     </div>
                 </div>
             </div>
@@ -160,110 +169,101 @@ function createProject() {
                 <p class="section-subtitle">Technologies I work with</p>
             </div>
             <div class="skills-container">
-                <div class="skills-category">
-                    <h3><i class="fas fa-code"></i> Programming Languages</h3>
-                    <div class="skills-grid">
-                        <div class="skill-card" data-skill="95">
-                            <div class="skill-icon">
-                                <i class="fab fa-java"></i>
-                            </div>
-                            <div class="skill-info">
-                                <h4>Java</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">95%</span>
-                            </div>
+                <div class="skills-grid">
+                    <div class="skill-card" data-skill="95">
+                        <div class="skill-icon">
+                            <i class="fab fa-java"></i>
                         </div>
-                        <div class="skill-card" data-skill="90">
-                            <div class="skill-icon">
-                                <i class="fab fa-js"></i>
+                        <div class="skill-info">
+                            <h4>Java</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
                             </div>
-                            <div class="skill-info">
-                                <h4>JavaScript</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">90%</span>
-                            </div>
-                        </div>
-                        <div class="skill-card" data-skill="85">
-                            <div class="skill-icon">
-                                <i class="fab fa-python"></i>
-                            </div>
-                            <div class="skill-info">
-                                <h4>Python</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">85%</span>
-                            </div>
-                        </div>
-                        <div class="skill-card" data-skill="95">
-                            <div class="skill-icon">
-                                <i class="fas fa-terminal"></i>
-                            </div>
-                            <div class="skill-info">
-                                <h4>Skript</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">95%</span>
-                            </div>
+                            <span class="skill-percent">95%</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="skills-category">
-                    <h3><i class="fas fa-layer-group"></i> Web Development</h3>
-                    <div class="skills-grid">
-                        <div class="skill-card" data-skill="90">
-                            <div class="skill-icon">
-                                <i class="fab fa-html5"></i>
-                            </div>
-                            <div class="skill-info">
-                                <h4>HTML5</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">90%</span>
-                            </div>
+                    <div class="skill-card" data-skill="90">
+                        <div class="skill-icon">
+                            <i class="fab fa-js"></i>
                         </div>
-                        <div class="skill-card" data-skill="88">
-                            <div class="skill-icon">
-                                <i class="fab fa-css3-alt"></i>
+                        <div class="skill-info">
+                            <h4>JavaScript</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
                             </div>
-                            <div class="skill-info">
-                                <h4>CSS3</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">88%</span>
-                            </div>
+                            <span class="skill-percent">90%</span>
                         </div>
-                        <div class="skill-card" data-skill="80">
-                            <div class="skill-icon">
-                                <i class="fab fa-react"></i>
-                            </div>
-                            <div class="skill-info">
-                                <h4>React</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">80%</span>
-                            </div>
+                    </div>
+                    <div class="skill-card" data-skill="85">
+                        <div class="skill-icon">
+                            <i class="fab fa-python"></i>
                         </div>
-                        <div class="skill-card" data-skill="75">
-                            <div class="skill-icon">
-                                <i class="fab fa-node-js"></i>
+                        <div class="skill-info">
+                            <h4>Python</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
                             </div>
-                            <div class="skill-info">
-                                <h4>Node.js</h4>
-                                <div class="skill-bar">
-                                    <div class="skill-progress"></div>
-                                </div>
-                                <span class="skill-percent">75%</span>
+                            <span class="skill-percent">85%</span>
+                        </div>
+                    </div>
+                    <div class="skill-card" data-skill="95">
+                        <div class="skill-icon">
+                            <i class="fas fa-terminal"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h4>Skript</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
                             </div>
+                            <span class="skill-percent">95%</span>
+                        </div>
+                    </div>
+                    <div class="skill-card" data-skill="90">
+                        <div class="skill-icon">
+                            <i class="fab fa-html5"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h4>HTML5</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
+                            </div>
+                            <span class="skill-percent">90%</span>
+                        </div>
+                    </div>
+                    <div class="skill-card" data-skill="88">
+                        <div class="skill-icon">
+                            <i class="fab fa-css3-alt"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h4>CSS3</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
+                            </div>
+                            <span class="skill-percent">88%</span>
+                        </div>
+                    </div>
+                    <div class="skill-card" data-skill="80">
+                        <div class="skill-icon">
+                            <i class="fab fa-node-js"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h4>Node.js</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
+                            </div>
+                            <span class="skill-percent">80%</span>
+                        </div>
+                    </div>
+                    <div class="skill-card" data-skill="75">
+                        <div class="skill-icon">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h4>Discord.js</h4>
+                            <div class="skill-bar">
+                                <div class="skill-progress"></div>
+                            </div>
+                            <span class="skill-percent">75%</span>
                         </div>
                     </div>
                 </div>
@@ -274,62 +274,135 @@ function createProject() {
         <section id="projects" class="section">
             <div class="section-header">
                 <h2>My <span class="highlight">Projects</span></h2>
-                <p class="section-subtitle">Some of my recent work</p>
+                <p class="section-subtitle">Real projects I've built</p>
             </div>
             <div class="projects-container">
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-tags">
-                            <span class="tag">Java</span>
-                            <span class="tag">Minecraft</span>
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Minecraft Plugin">
-                    </div>
-                    <div class="project-content">
-                        <h3>Advanced MC Plugin Suite</h3>
-                        <p>A comprehensive Minecraft server plugin suite with custom features, economy system, and admin tools built with Java and Skript.</p>
-                        <div class="project-links">
-                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Demo</a>
-                        </div>
-                    </div>
-                </div>
-                
+                <!-- BGSI Project -->
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-tags">
                             <span class="tag">JavaScript</span>
-                            <span class="tag">React</span>
+                            <span class="tag">HTML/CSS</span>
+                            <span class="tag">Roblox</span>
+                            <span class="tag">Live</span>
                         </div>
-                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Web Dashboard">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="BGSI Website">
                     </div>
                     <div class="project-content">
-                        <h3>Interactive Web Dashboard</h3>
-                        <p>A modern admin dashboard with real-time data visualization, user management, and responsive design built with React and Node.js.</p>
+                        <h3>BGSI Website</h3>
+                        <p>Complete database website for Bubble Gum Simulator Infinity Roblox game. Features egg probabilities, pet values, game stats, and automation tools.</p>
+                        
+                        <div class="project-features">
+                            <span class="feature">🎮 Roblox Game Data</span>
+                            <span class="feature">📊 Egg Calculator</span>
+                            <span class="feature">🐾 Pet Database</span>
+                            <span class="feature">⚡ Live Updates</span>
+                        </div>
+                        
                         <div class="project-links">
-                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live</a>
+                            <a href="https://bgsi.ascyt.com" target="_blank" class="btn primary-btn">
+                                <span>Visit Website</span>
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            <button class="btn secondary-btn" onclick="showProjectDetails('bgsi')">
+                                <span>View Details</span>
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <span class="stat"><i class="fas fa-users"></i> 500+ Daily Users</span>
+                            <span class="stat"><i class="fas fa-database"></i> 1000+ Pets</span>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Zarnix Bot Project -->
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-tags">
-                            <span class="tag">Python</span>
-                            <span class="tag">Automation</span>
+                            <span class="tag">Discord.js</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">Live</span>
                         </div>
-                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Python Bot">
+                        <img src="https://images.unsplash.com/photo-1614680376593-902f74cf0d41?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Zarnix Bot">
                     </div>
                     <div class="project-content">
-                        <h3>Discord Automation Bot</h3>
-                        <p>A multi-purpose Discord bot with moderation tools, games, music player, and custom commands built with Python and Discord.py.</p>
+                        <h3>Zarnix Discord Bot</h3>
+                        <p>Multi-functional Discord bot with moderation tools, ticket system, utilities, and custom commands for gaming communities.</p>
+                        
+                        <div class="project-features">
+                            <span class="feature">🛡️ Moderation Tools</span>
+                            <span class="feature">🎫 Ticket System</span>
+                            <span class="feature">🔧 Utilities</span>
+                            <span class="feature">🎮 Games</span>
+                        </div>
+                        
                         <div class="project-links">
-                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Invite</a>
+                            <a href="https://discord.gg/GDnvhpea" target="_blank" class="btn primary-btn">
+                                <span>Join Discord</span>
+                                <i class="fab fa-discord"></i>
+                            </a>
+                            <button class="btn secondary-btn" onclick="showProjectDetails('zarnix')">
+                                <span>View Details</span>
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <span class="stat"><i class="fas fa-server"></i> 50+ Servers</span>
+                            <span class="stat"><i class="fas fa-commands"></i> 100+ Commands</span>
                         </div>
                     </div>
                 </div>
+                
+                <!-- CloudNetwork Project -->
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-tags">
+                            <span class="tag">Minecraft</span>
+                            <span class="tag">Java</span>
+                            <span class="tag">Skript</span>
+                            <span class="tag soon">COMING SOON</span>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1531315630201-bb15abeb1653?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="CloudNetwork">
+                    </div>
+                    <div class="project-content">
+                        <h3>CloudNetwork Minecraft</h3>
+                        <p>Upcoming Minecraft server with custom plugins, unique economy system, and innovative gameplay features.</p>
+                        
+                        <div class="project-features">
+                            <span class="feature">⚔️ Custom Gameplay</span>
+                            <span class="feature">💰 Economy System</span>
+                            <span class="feature">🔧 Custom Plugins</span>
+                            <span class="feature">🎯 Unique Features</span>
+                        </div>
+                        
+                        <div class="project-links">
+                            <a href="https://discord.gg/p8EZa5t4ng" target="_blank" class="btn primary-btn">
+                                <span>Join Discord</span>
+                                <i class="fab fa-discord"></i>
+                            </a>
+                            <button class="btn secondary-btn" onclick="showProjectDetails('cloudnetwork')">
+                                <span>View Details</span>
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <span class="stat"><i class="fas fa-users"></i> 1000+ Community</span>
+                            <span class="stat"><i class="fas fa-plug"></i> Custom Plugins</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="projects-actions">
+                <button class="btn primary-btn" onclick="showSection('contact')">
+                    <span>Want Something Similar?</span>
+                    <i class="fas fa-handshake"></i>
+                </button>
             </div>
         </section>
 
@@ -365,39 +438,51 @@ function createProject() {
                     </form>
                 </div>
                 <div class="contact-info">
-                    <div class="info-card">
+                    <div class="info-card" onclick="copyToClipboard('contact@youngblock2k.dev')">
                         <div class="info-icon">
                             <i class="fas fa-envelope"></i>
                         </div>
                         <div class="info-content">
                             <h3>Email</h3>
                             <p>contact@youngblock2k.dev</p>
+                            <span class="copy-hint">Click to copy</span>
                         </div>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card" onclick="copyToClipboard('youngblock2k')">
                         <div class="info-icon">
                             <i class="fab fa-discord"></i>
                         </div>
                         <div class="info-content">
                             <h3>Discord</h3>
                             <p>youngblock2k</p>
+                            <span class="copy-hint">Click to copy</span>
                         </div>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card" onclick="window.open('https://github.com/youngblock2k', '_blank')">
                         <div class="info-icon">
                             <i class="fab fa-github"></i>
                         </div>
                         <div class="info-content">
                             <h3>GitHub</h3>
                             <p>github.com/youngblock2k</p>
+                            <span class="copy-hint">Click to visit</span>
                         </div>
                     </div>
                     
                     <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <button class="social-link" onclick="window.open('https://discord.gg/p8EZa5t4ng', '_blank')">
+                            <i class="fab fa-discord"></i>
+                        </button>
+                        <button class="social-link" onclick="window.open('https://github.com/youngblock2k', '_blank')">
+                            <i class="fab fa-github"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="contact-actions">
+                        <button class="btn secondary-btn" onclick="showSection('projects')">
+                            <span>View My Projects</span>
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -407,25 +492,34 @@ function createProject() {
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-logo">YB2K</div>
-            <p class="footer-text">Coding the future, one line at a time</p>
+            <div class="footer-logo" onclick="showSection('home')" style="cursor: pointer;">YB2K</div>
+            <p class="footer-text">Building tools for gaming communities</p>
             <div class="footer-links">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
-                <a href="#contact">Contact</a>
+                <button onclick="showSection('home')">Home</button>
+                <button onclick="showSection('about')">About</button>
+                <button onclick="showSection('skills')">Skills</button>
+                <button onclick="showSection('projects')">Projects</button>
+                <button onclick="showSection('contact')">Contact</button>
             </div>
             <div class="copyright">
-                © 2023 Youngblock2k. All rights reserved.
+                © 2024 Youngblock2k. All rights reserved.
             </div>
         </div>
     </footer>
 
     <!-- Back to Top Button -->
-    <button class="back-to-top">
+    <button class="back-to-top" onclick="scrollToTop()">
         <i class="fas fa-chevron-up"></i>
     </button>
+
+    <!-- Modal for Project Details -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Project Details</h2>
+            <div id="modalContent"></div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
