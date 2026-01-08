@@ -1,1 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarnix Ticket Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        .ticket-open { border-left: 5px solid #28a745; }
+        .ticket-closed { border-left: 5px solid #dc3545; }
+        .ticket-claimed { border-left: 5px solid #007bff; }
+        .log-user { color: #3498db; }
+        .log-staff { color: #2ecc71; }
+        .log-anonymous { color: #9b59b6; }
+        .log-system { color: #e74c3c; }
+        .server-card { transition: transform 0.2s; }
+        .server-card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-ticket-detailed"></i> Zarnix Ticket Dashboard
+            </a>
+            <div class="d-flex">
+                <select id="serverSelect" class="form-select me-2" style="width: 200px;">
+                    <option value="">All Servers</option>
+                </select>
+                <select id="statusFilter" class="form-select me-2" style="width: 150px;">
+                    <option value="">All Status</option>
+                    <option value="open">Open</option>
+                    <option value="closed">Closed</option>
+                    <option value="claimed">Claimed</option>
+                </select>
+                <button class="btn btn-outline-light" onclick="refreshData()">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+            </div>
+        </div>
+    </nav>
 
+    <div class="container-fluid mt-4">
+        <!-- Stats Cards -->
+        <div class="row mb-4" id="statsRow">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Tickets</h5>
+                        <h2 id="totalTickets">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Open</h5>
+                        <h2 id="openTickets">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <h5 class="card-title">Claimed</h5>
+                        <h2 id="claimedTickets">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">Closed</h5>
+                        <h2 id="closedTickets">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tickets Table -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-ticket"></i> Tickets</h5>
+            </div>
+            <div class="card-body">
+                <table id="ticketsTable" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                            <th>Opened</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticketsBody">
+                        <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Ticket Details Modal -->
+        <div class="modal fade" id="ticketModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Ticket Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6>Ticket Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>Ticket ID:</strong> <span id="infoId"></span></p>
+                                        <p><strong>Status:</strong> <span id="infoStatus" class="badge"></span></p>
+                                        <p><strong>User ID:</strong> <code id="infoUserId"></code></p>
+                                        <p><strong>Server ID:</strong> <code id="infoServerId"></code></p>
+                                        <p><strong>Opened:</strong> <span id="infoOpened"></span></p>
+                                        <p><strong>Closed:</strong> <span id="infoClosed"></span></p>
+                                        <p><strong>Claimed By:</strong> <span id="infoClaimed"></span></p>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h6>Quick Actions</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <button class="btn btn-primary w-100 mb-2" onclick="viewTranscript()">
+                                            <i class="bi bi-file-text"></i> View Full Transcript
+                                        </button>
+                                        <button class="btn btn-success w-100 mb-2" onclick="exportTicket()">
+                                            <i class="bi bi-download"></i> Export as JSON
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6>Conversation Logs</h6>
+                                    </div>
+                                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                                        <div id="conversationLogs">
+                                            <!-- Logs will be inserted here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        let currentTicketId = null;
+        
+        // Load servers on page load
+        async function loadServers() {
+            const response = await fetch('/api/servers');
+            const servers = await response.json();
+            
+            const select = document.getElementById('serverSelect');
+            servers.forEach(server => {
+                const option = document.createElement('option');
+                option.value = server.server_id;
+                option.textContent = `Server: ${server.server_id}`;
+                select.appendChild(option);
+            });
+        }
+        
+        // Load tickets
+        async function loadTickets() {
+            const serverId = document.getElementById('serverSelect').value;
+            const status = document.getElementById('statusFilter').value;
+            
+            let url = '/api/tickets';
+            const params = new URLSearchParams();
+            if (serverId) params.append('server_id', serverId);
+            if (status) params.append('status', status);
+            
+            if (params.toString()) url += '?' + params.toString();
+            
+            const response = await fetch(url);
+            const tickets = await response.json();
+            
+            const tbody = document.getElementById('ticketsBody');
+            tbody.innerHTML = '';
+            
+            tickets.forEach(ticket => {
+                const tr = document.createElement('tr');
+                tr.className = `ticket-${ticket.status}`;
+                
+                const statusBadge = ticket.status === 'open' ? 'badge bg-success' :
+                                  ticket.status === 'closed' ? 'badge bg-secondary' :
+                                  'badge bg-primary';
+                
+                tr.innerHTML = `
+                    <td><strong>${ticket.ticket_id}</strong></td>
+                    <td>${ticket.user_id}</td>
+                    <td><span class="${statusBadge}">${ticket.status}</span></td>
+                    <td>${ticket.type}</td>
+                    <td>${new Date(ticket.opened_at).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="viewTicket('${ticket.ticket_id}')">
+                            <i class="bi bi-eye"></i> View
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Load stats
+            await loadStats(serverId);
+        }
+        
+        // Load statistics
+        async function loadStats(serverId) {
+            let url = '/api/stats';
+            if (serverId) url += '?server_id=' + serverId;
+            
+            const response = await fetch(url);
+            const stats = await response.json();
+            
+            let total = 0, open = 0, claimed = 0, closed = 0;
+            
+            stats.forEach(stat => {
+                total += stat.total;
+                if (stat.status === 'open') open = stat.total;
+                if (stat.status === 'claimed') claimed = stat.total;
+                if (stat.status === 'closed') closed = stat.total;
+            });
+            
+            document.getElementById('totalTickets').textContent = total;
+            document.getElementById('openTickets').textContent = open;
+            document.getElementById('claimedTickets').textContent = claimed;
+            document.getElementById('closedTickets').textContent = closed;
+        }
+        
+        // View ticket details
+        async function viewTicket(ticketId) {
+            currentTicketId = ticketId;
+            
+            const response = await fetch(`/api/ticket/${ticketId}`);
+            const data = await response.json();
+            
+            const ticket = data.ticket;
+            const logs = data.logs;
+            
+            // Update modal info
+            document.getElementById('infoId').textContent = ticket.ticket_id;
+            document.getElementById('infoStatus').textContent = ticket.status;
+            document.getElementById('infoStatus').className = `badge ${ticket.status === 'open' ? 'bg-success' : ticket.status === 'closed' ? 'bg-secondary' : 'bg-primary'}`;
+            document.getElementById('infoUserId').textContent = ticket.user_id;
+            document.getElementById('infoServerId').textContent = ticket.server_id;
+            document.getElementById('infoOpened').textContent = new Date(ticket.opened_at).toLocaleString();
+            document.getElementById('infoClosed').textContent = ticket.closed_at ? new Date(ticket.closed_at).toLocaleString() : 'Not closed';
+            document.getElementById('infoClaimed').textContent = ticket.claimed_by || 'Not claimed';
+            
+            // Update conversation logs
+            const logsDiv = document.getElementById('conversationLogs');
+            logsDiv.innerHTML = '';
+            
+            logs.forEach(log => {
+                const logDiv = document.createElement('div');
+                logDiv.className = 'mb-3 p-2 border rounded';
+                
+                let authorClass = 'log-user';
+                if (log.message_type === 'staff_reply') authorClass = 'log-staff';
+                if (log.message_type === 'anonymous_reply') authorClass = 'log-anonymous';
+                if (log.message_type === 'system') authorClass = 'log-system';
+                
+                logDiv.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong class="${authorClass}">${log.author_name}</strong>
+                        <small class="text-muted">${new Date(log.created_at).toLocaleString()}</small>
+                    </div>
+                    <div class="mt-1">${log.content || '<em>No content</em>'}</div>
+                    ${log.attachment_urls && log.attachment_urls.length > 0 ? 
+                        `<div class="mt-2">
+                            <small><strong>Attachments:</strong> ${log.attachment_urls.map(url => `<a href="${url}" target="_blank">${url.split('/').pop()}</a>`).join(', ')}</small>
+                        </div>` : ''
+                    }
+                `;
+                logsDiv.appendChild(logDiv);
+            });
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('ticketModal'));
+            modal.show();
+        }
+        
+        // View full transcript
+        async function viewTranscript() {
+            if (!currentTicketId) return;
+            
+            const response = await fetch(`/api/transcript/${currentTicketId}`);
+            const transcript = await response.json();
+            
+            if (transcript) {
+                alert(transcript.transcript_text || 'No transcript available');
+            } else {
+                alert('Transcript not found');
+            }
+        }
+        
+        // Export ticket as JSON
+        async function exportTicket() {
+            if (!currentTicketId) return;
+            
+            const response = await fetch(`/api/ticket/${currentTicketId}`);
+            const data = await response.json();
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ticket-${currentTicketId}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Refresh all data
+        function refreshData() {
+            loadTickets();
+        }
+        
+        // Event listeners
+        document.getElementById('serverSelect').addEventListener('change', loadTickets);
+        document.getElementById('statusFilter').addEventListener('change', loadTickets);
+        
+        // Initialize
+        loadServers();
+        loadTickets();
+        setInterval(loadTickets, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>
