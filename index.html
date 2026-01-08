@@ -5,75 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zarnix Ticket Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        .ticket-open { border-left: 5px solid #28a745; }
-        .ticket-closed { border-left: 5px solid #dc3545; }
-        .ticket-claimed { border-left: 5px solid #007bff; }
-        .log-user { color: #3498db; }
-        .log-staff { color: #2ecc71; }
-        .log-anonymous { color: #9b59b6; }
-        .log-system { color: #e74c3c; }
-        .server-card { transition: transform 0.2s; }
-        .server-card:hover { transform: translateY(-5px); }
+        :root {
+            --primary: #71368a;
+            --secondary: #2ecc71;
+            --dark: #1a1a2e;
+        }
+        body { 
+            background: var(--dark); 
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar { background: rgba(0,0,0,0.8) !important; backdrop-filter: blur(10px); }
+        .card { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .ticket-card { 
+            background: rgba(255,255,255,0.03);
+            border-left: 4px solid var(--secondary);
+            transition: all 0.3s;
+        }
+        .ticket-card:hover { 
+            background: rgba(255,255,255,0.08);
+            transform: translateX(5px);
+        }
+        .status-badge { font-size: 0.8em; }
+        .stats-card { 
+            background: linear-gradient(135deg, var(--primary), #8e44ad);
+            border: none;
+        }
+        .modal-content { background: var(--dark); }
+        .form-control, .form-select { 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+        }
+        .btn-primary { background: var(--primary); border: none; }
+        .btn-success { background: var(--secondary); border: none; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="bi bi-ticket-detailed"></i> Zarnix Ticket Dashboard
+                <i class="bi bi-ticket-detailed"></i> <strong>Zarnix</strong> Ticket System
             </a>
-            <div class="d-flex">
-                <select id="serverSelect" class="form-select me-2" style="width: 200px;">
-                    <option value="">All Servers</option>
-                </select>
-                <select id="statusFilter" class="form-select me-2" style="width: 150px;">
-                    <option value="">All Status</option>
-                    <option value="open">Open</option>
-                    <option value="closed">Closed</option>
-                    <option value="claimed">Claimed</option>
-                </select>
-                <button class="btn btn-outline-light" onclick="refreshData()">
-                    <i class="bi bi-arrow-clockwise"></i> Refresh
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <span class="badge bg-primary" id="connectionStatus">
+                        <i class="bi bi-wifi"></i> Connecting...
+                    </span>
+                </div>
+                <button class="btn btn-outline-light" onclick="refreshAll()">
+                    <i class="bi bi-arrow-clockwise"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <div class="container-fluid mt-4">
-        <!-- Stats Cards -->
+    <!-- Main Container -->
+    <div class="container mt-4">
+        <!-- Stats Row -->
         <div class="row mb-4" id="statsRow">
-            <div class="col-md-3">
-                <div class="card text-white bg-primary">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Tickets</h5>
-                        <h2 id="totalTickets">0</h2>
+            <div class="col-md-3 mb-3">
+                <div class="card stats-card text-white">
+                    <div class="card-body text-center">
+                        <h1 class="display-4" id="totalTickets">0</h1>
+                        <h6>Total Tickets</h6>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-success">
-                    <div class="card-body">
-                        <h5 class="card-title">Open</h5>
-                        <h2 id="openTickets">0</h2>
+            <div class="col-md-3 mb-3">
+                <div class="card stats-card text-white">
+                    <div class="card-body text-center">
+                        <h1 class="display-4" id="openTickets">0</h1>
+                        <h6>Open</h6>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-info">
-                    <div class="card-body">
-                        <h5 class="card-title">Claimed</h5>
-                        <h2 id="claimedTickets">0</h2>
+            <div class="col-md-3 mb-3">
+                <div class="card stats-card text-white">
+                    <div class="card-body text-center">
+                        <h1 class="display-4" id="claimedTickets">0</h1>
+                        <h6>Claimed</h6>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-secondary">
+            <div class="col-md-3 mb-3">
+                <div class="card stats-card text-white">
+                    <div class="card-body text-center">
+                        <h1 class="display-4" id="closedTickets">0</h1>
+                        <h6>Closed</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Closed</h5>
-                        <h2 id="closedTickets">0</h2>
+                        <h6><i class="bi bi-hdd-network"></i> Select Server</h6>
+                        <select id="serverSelect" class="form-select mt-2" onchange="loadTickets()">
+                            <option value="">All Servers</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6><i class="bi bi-funnel"></i> Filter Status</h6>
+                        <div class="btn-group w-100 mt-2" role="group">
+                            <button type="button" class="btn btn-outline-primary active" onclick="setFilter('all')">All</button>
+                            <button type="button" class="btn btn-outline-success" onclick="setFilter('open')">Open</button>
+                            <button type="button" class="btn btn-outline-warning" onclick="setFilter('claimed')">Claimed</button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="setFilter('closed')">Closed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6><i class="bi bi-speedometer2"></i> Quick Actions</h6>
+                        <div class="d-grid gap-2 mt-2">
+                            <button class="btn btn-primary" onclick="refreshAll()">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh All
+                            </button>
+                            <button class="btn btn-success" onclick="exportData()">
+                                <i class="bi bi-download"></i> Export Data
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,77 +149,90 @@
 
         <!-- Tickets Table -->
         <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-ticket"></i> Tickets</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-tickets"></i> Tickets <span class="badge bg-primary ms-2" id="ticketCount">0</span></h5>
+                <div>
+                    <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search tickets..." 
+                           onkeyup="searchTickets()" style="width: 200px; display: inline-block;">
+                </div>
             </div>
             <div class="card-body">
-                <table id="ticketsTable" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Ticket ID</th>
-                            <th>User</th>
-                            <th>Status</th>
-                            <th>Type</th>
-                            <th>Opened</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ticketsBody">
-                        <!-- Filled by JavaScript -->
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Ticket #</th>
+                                <th>User</th>
+                                <th>Server</th>
+                                <th>Status</th>
+                                <th>Opened</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketsTable">
+                            <!-- Tickets will load here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="text-center py-5" id="loading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Connecting to ticket system...</p>
+                </div>
+                
+                <div class="text-center py-5" id="noTickets" style="display: none;">
+                    <i class="bi bi-ticket" style="font-size: 48px; opacity: 0.3;"></i>
+                    <p class="mt-2 text-muted">No tickets found</p>
+                </div>
             </div>
         </div>
 
         <!-- Ticket Details Modal -->
         <div class="modal fade" id="ticketModal" tabindex="-1">
-            <div class="modal-dialog modal-xl">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalTitle">Ticket Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title">Ticket Details</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card">
-                                    <div class="card-header">
+                                    <div class="card-body">
                                         <h6>Ticket Information</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p><strong>Ticket ID:</strong> <span id="infoId"></span></p>
-                                        <p><strong>Status:</strong> <span id="infoStatus" class="badge"></span></p>
-                                        <p><strong>User ID:</strong> <code id="infoUserId"></code></p>
-                                        <p><strong>Server ID:</strong> <code id="infoServerId"></code></p>
-                                        <p><strong>Opened:</strong> <span id="infoOpened"></span></p>
-                                        <p><strong>Closed:</strong> <span id="infoClosed"></span></p>
-                                        <p><strong>Claimed By:</strong> <span id="infoClaimed"></span></p>
-                                    </div>
-                                </div>
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h6>Quick Actions</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <button class="btn btn-primary w-100 mb-2" onclick="viewTranscript()">
-                                            <i class="bi bi-file-text"></i> View Full Transcript
-                                        </button>
-                                        <button class="btn btn-success w-100 mb-2" onclick="exportTicket()">
-                                            <i class="bi bi-download"></i> Export as JSON
-                                        </button>
+                                        <table class="table table-sm table-borderless">
+                                            <tr><td><strong>ID:</strong></td><td><code id="modalId"></code></td></tr>
+                                            <tr><td><strong>User:</strong></td><td><span id="modalUser"></span></td></tr>
+                                            <tr><td><strong>Server:</strong></td><td><span id="modalServer"></span></td></tr>
+                                            <tr><td><strong>Status:</strong></td><td><span id="modalStatus" class="badge"></span></td></tr>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="card">
-                                    <div class="card-header">
-                                        <h6>Conversation Logs</h6>
+                                    <div class="card-body">
+                                        <h6>Timestamps</h6>
+                                        <table class="table table-sm table-borderless">
+                                            <tr><td><strong>Opened:</strong></td><td><span id="modalOpened"></span></td></tr>
+                                            <tr><td><strong>Claimed:</strong></td><td><span id="modalClaimed"></span></td></tr>
+                                            <tr><td><strong>Closed:</strong></td><td><span id="modalClosed"></span></td></tr>
+                                        </table>
                                     </div>
-                                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
-                                        <div id="conversationLogs">
-                                            <!-- Logs will be inserted here -->
-                                        </div>
-                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h6 class="mb-0">Conversation Logs</h6>
+                            </div>
+                            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                                <div id="conversationLogs">
+                                    <!-- Logs will appear here -->
                                 </div>
                             </div>
                         </div>
@@ -161,61 +242,130 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Footer -->
+    <footer class="mt-5 py-3 text-center text-muted">
+        <div class="container">
+            <small>
+                Zarnix Ticket System | Connected to: <span id="apiEndpoint">192.168.0.227:25570</span> |
+                <span id="lastUpdated">Never updated</span>
+            </small>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script>
-        let currentTicketId = null;
+        // Configuration
+        const API_BASE = 'http://192.168.0.227:25570';
+        let currentFilter = 'all';
+        let currentServer = '';
+        let allTickets = [];
         
-        // Load servers on page load
+        // Check connection
+        async function checkConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                document.getElementById('connectionStatus').innerHTML = 
+                    '<i class="bi bi-wifi"></i> Connected';
+                document.getElementById('connectionStatus').className = 'badge bg-success';
+                return true;
+            } catch (error) {
+                document.getElementById('connectionStatus').innerHTML = 
+                    '<i class="bi bi-wifi-off"></i> Disconnected';
+                document.getElementById('connectionStatus').className = 'badge bg-danger';
+                return false;
+            }
+        }
+        
+        // Load servers
         async function loadServers() {
-            const response = await fetch('/api/servers');
-            const servers = await response.json();
-            
-            const select = document.getElementById('serverSelect');
-            servers.forEach(server => {
-                const option = document.createElement('option');
-                option.value = server.server_id;
-                option.textContent = `Server: ${server.server_id}`;
-                select.appendChild(option);
-            });
+            try {
+                const response = await fetch(`${API_BASE}/api/servers`);
+                const servers = await response.json();
+                
+                const select = document.getElementById('serverSelect');
+                select.innerHTML = '<option value="">All Servers</option>';
+                
+                servers.forEach(server => {
+                    const option = document.createElement('option');
+                    option.value = server.id;
+                    option.textContent = `${server.name} (${server.open_tickets} open)`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Failed to load servers:', error);
+            }
         }
         
         // Load tickets
         async function loadTickets() {
-            const serverId = document.getElementById('serverSelect').value;
-            const status = document.getElementById('statusFilter').value;
+            currentServer = document.getElementById('serverSelect').value;
             
-            let url = '/api/tickets';
-            const params = new URLSearchParams();
-            if (serverId) params.append('server_id', serverId);
-            if (status) params.append('status', status);
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('noTickets').style.display = 'none';
             
-            if (params.toString()) url += '?' + params.toString();
-            
-            const response = await fetch(url);
-            const tickets = await response.json();
-            
-            const tbody = document.getElementById('ticketsBody');
+            try {
+                let url = `${API_BASE}/api/tickets`;
+                const params = new URLSearchParams();
+                if (currentServer) params.append('server_id', currentServer);
+                if (currentFilter !== 'all') params.append('status', currentFilter);
+                
+                if (params.toString()) url += '?' + params.toString();
+                
+                const response = await fetch(url);
+                allTickets = await response.json();
+                
+                displayTickets(allTickets);
+                
+                // Update last updated time
+                const now = new Date();
+                document.getElementById('lastUpdated').textContent = 
+                    `Last updated: ${now.toLocaleTimeString()}`;
+            } catch (error) {
+                console.error('Failed to load tickets:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('noTickets').style.display = 'block';
+            }
+        }
+        
+        // Display tickets in table
+        function displayTickets(tickets) {
+            const tbody = document.getElementById('ticketsTable');
             tbody.innerHTML = '';
+            
+            if (tickets.length === 0) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('noTickets').style.display = 'block';
+                document.getElementById('ticketCount').textContent = '0';
+                return;
+            }
             
             tickets.forEach(ticket => {
                 const tr = document.createElement('tr');
-                tr.className = `ticket-${ticket.status}`;
+                tr.className = 'ticket-card';
                 
-                const statusBadge = ticket.status === 'open' ? 'badge bg-success' :
-                                  ticket.status === 'closed' ? 'badge bg-secondary' :
-                                  'badge bg-primary';
+                // Extract ticket number from ID
+                const ticketNum = ticket.id.split('-')[1] || 'N/A';
+                
+                // Status badge
+                let statusClass, statusText;
+                switch(ticket.status) {
+                    case 'open': statusClass = 'bg-success'; statusText = 'Open'; break;
+                    case 'claimed': statusClass = 'bg-warning'; statusText = 'Claimed'; break;
+                    case 'closed': statusClass = 'bg-secondary'; statusText = 'Closed'; break;
+                    default: statusClass = 'bg-info'; statusText = ticket.status;
+                }
+                
+                // Format date
+                const openedDate = ticket.opened_at ? new Date(ticket.opened_at).toLocaleString() : 'Unknown';
                 
                 tr.innerHTML = `
-                    <td><strong>${ticket.ticket_id}</strong></td>
-                    <td>${ticket.user_id}</td>
-                    <td><span class="${statusBadge}">${ticket.status}</span></td>
-                    <td>${ticket.type}</td>
-                    <td>${new Date(ticket.opened_at).toLocaleString()}</td>
+                    <td><strong>#${ticketNum}</strong></td>
+                    <td><code>${ticket.user_id || 'Unknown'}</code></td>
+                    <td>${ticket.server_name}</td>
+                    <td><span class="badge ${statusClass} status-badge">${statusText}</span></td>
+                    <td>${openedDate}</td>
                     <td>
-                        <button class="btn btn-sm btn-info" onclick="viewTicket('${ticket.ticket_id}')">
+                        <button class="btn btn-sm btn-info" onclick="viewTicket('${ticket.id}')">
                             <i class="bi bi-eye"></i> View
                         </button>
                     </td>
@@ -223,131 +373,167 @@
                 tbody.appendChild(tr);
             });
             
-            // Load stats
-            await loadStats(serverId);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('ticketCount').textContent = `${tickets.length}`;
         }
         
         // Load statistics
-        async function loadStats(serverId) {
-            let url = '/api/stats';
-            if (serverId) url += '?server_id=' + serverId;
-            
-            const response = await fetch(url);
-            const stats = await response.json();
-            
-            let total = 0, open = 0, claimed = 0, closed = 0;
-            
-            stats.forEach(stat => {
-                total += stat.total;
-                if (stat.status === 'open') open = stat.total;
-                if (stat.status === 'claimed') claimed = stat.total;
-                if (stat.status === 'closed') closed = stat.total;
+        async function loadStats() {
+            try {
+                let url = `${API_BASE}/api/stats`;
+                if (currentServer) url += '?server_id=' + currentServer;
+                
+                const response = await fetch(url);
+                const stats = await response.json();
+                
+                document.getElementById('totalTickets').textContent = stats.total || 0;
+                document.getElementById('openTickets').textContent = stats.open || 0;
+                document.getElementById('claimedTickets').textContent = stats.claimed || 0;
+                document.getElementById('closedTickets').textContent = stats.closed || 0;
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+        
+        // Set filter
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.btn-group .btn').forEach(btn => {
+                btn.classList.remove('active');
             });
+            event.target.classList.add('active');
+            loadTickets();
+        }
+        
+        // Search tickets
+        function searchTickets() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
-            document.getElementById('totalTickets').textContent = total;
-            document.getElementById('openTickets').textContent = open;
-            document.getElementById('claimedTickets').textContent = claimed;
-            document.getElementById('closedTickets').textContent = closed;
+            if (!searchTerm) {
+                displayTickets(allTickets);
+                return;
+            }
+            
+            const filtered = allTickets.filter(ticket => 
+                ticket.id.toLowerCase().includes(searchTerm) ||
+                ticket.user_id.toLowerCase().includes(searchTerm) ||
+                ticket.server_name.toLowerCase().includes(searchTerm) ||
+                ticket.status.toLowerCase().includes(searchTerm)
+            );
+            
+            displayTickets(filtered);
         }
         
         // View ticket details
         async function viewTicket(ticketId) {
-            currentTicketId = ticketId;
-            
-            const response = await fetch(`/api/ticket/${ticketId}`);
-            const data = await response.json();
-            
-            const ticket = data.ticket;
-            const logs = data.logs;
-            
-            // Update modal info
-            document.getElementById('infoId').textContent = ticket.ticket_id;
-            document.getElementById('infoStatus').textContent = ticket.status;
-            document.getElementById('infoStatus').className = `badge ${ticket.status === 'open' ? 'bg-success' : ticket.status === 'closed' ? 'bg-secondary' : 'bg-primary'}`;
-            document.getElementById('infoUserId').textContent = ticket.user_id;
-            document.getElementById('infoServerId').textContent = ticket.server_id;
-            document.getElementById('infoOpened').textContent = new Date(ticket.opened_at).toLocaleString();
-            document.getElementById('infoClosed').textContent = ticket.closed_at ? new Date(ticket.closed_at).toLocaleString() : 'Not closed';
-            document.getElementById('infoClaimed').textContent = ticket.claimed_by || 'Not claimed';
-            
-            // Update conversation logs
-            const logsDiv = document.getElementById('conversationLogs');
-            logsDiv.innerHTML = '';
-            
-            logs.forEach(log => {
-                const logDiv = document.createElement('div');
-                logDiv.className = 'mb-3 p-2 border rounded';
+            try {
+                const response = await fetch(`${API_BASE}/api/ticket/${ticketId}`);
+                const ticket = await response.json();
                 
-                let authorClass = 'log-user';
-                if (log.message_type === 'staff_reply') authorClass = 'log-staff';
-                if (log.message_type === 'anonymous_reply') authorClass = 'log-anonymous';
-                if (log.message_type === 'system') authorClass = 'log-system';
+                if (ticket.error) {
+                    alert('Ticket not found');
+                    return;
+                }
                 
-                logDiv.innerHTML = `
-                    <div class="d-flex justify-content-between">
-                        <strong class="${authorClass}">${log.author_name}</strong>
-                        <small class="text-muted">${new Date(log.created_at).toLocaleString()}</small>
-                    </div>
-                    <div class="mt-1">${log.content || '<em>No content</em>'}</div>
-                    ${log.attachment_urls && log.attachment_urls.length > 0 ? 
-                        `<div class="mt-2">
-                            <small><strong>Attachments:</strong> ${log.attachment_urls.map(url => `<a href="${url}" target="_blank">${url.split('/').pop()}</a>`).join(', ')}</small>
-                        </div>` : ''
-                    }
-                `;
-                logsDiv.appendChild(logDiv);
-            });
-            
-            // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('ticketModal'));
-            modal.show();
-        }
-        
-        // View full transcript
-        async function viewTranscript() {
-            if (!currentTicketId) return;
-            
-            const response = await fetch(`/api/transcript/${currentTicketId}`);
-            const transcript = await response.json();
-            
-            if (transcript) {
-                alert(transcript.transcript_text || 'No transcript available');
-            } else {
-                alert('Transcript not found');
+                // Update modal
+                document.getElementById('modalId').textContent = ticket.id;
+                document.getElementById('modalUser').textContent = ticket.user_id || 'Unknown';
+                document.getElementById('modalServer').textContent = ticket.server_name;
+                
+                // Status
+                let statusClass, statusText;
+                switch(ticket.status) {
+                    case 'open': statusClass = 'bg-success'; statusText = 'Open'; break;
+                    case 'claimed': statusClass = 'bg-warning'; statusText = 'Claimed'; break;
+                    case 'closed': statusClass = 'bg-secondary'; statusText = 'Closed'; break;
+                    default: statusClass = 'bg-info'; statusText = ticket.status;
+                }
+                document.getElementById('modalStatus').className = `badge ${statusClass}`;
+                document.getElementById('modalStatus').textContent = statusText;
+                
+                // Dates
+                document.getElementById('modalOpened').textContent = 
+                    ticket.opened_at ? new Date(ticket.opened_at).toLocaleString() : 'Unknown';
+                document.getElementById('modalClaimed').textContent = 
+                    ticket.claimed_by || 'Not claimed';
+                document.getElementById('modalClosed').textContent = 
+                    ticket.status === 'closed' ? 'Closed' : 'Still open';
+                
+                // Logs
+                const logsDiv = document.getElementById('conversationLogs');
+                logsDiv.innerHTML = '';
+                
+                if (ticket.logs && ticket.logs.length > 0) {
+                    ticket.logs.forEach(log => {
+                        const logDiv = document.createElement('div');
+                        logDiv.className = 'mb-2 p-2 bg-dark rounded';
+                        
+                        let icon = 'bi-person';
+                        if (log.type === 'system') icon = 'bi-gear';
+                        
+                        logDiv.innerHTML = `
+                            <div class="d-flex justify-content-between">
+                                <small><i class="${icon}"></i> ${log.author}</small>
+                                <small class="text-muted">${new Date(log.timestamp).toLocaleTimeString()}</small>
+                            </div>
+                            <div class="mt-1">${log.content || '<em>No content</em>'}</div>
+                        `;
+                        logsDiv.appendChild(logDiv);
+                    });
+                } else {
+                    logsDiv.innerHTML = '<p class="text-muted">No logs available</p>';
+                }
+                
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('ticketModal'));
+                modal.show();
+            } catch (error) {
+                console.error('Failed to load ticket:', error);
+                alert('Failed to load ticket details');
             }
         }
         
-        // Export ticket as JSON
-        async function exportTicket() {
-            if (!currentTicketId) return;
-            
-            const response = await fetch(`/api/ticket/${currentTicketId}`);
-            const data = await response.json();
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ticket-${currentTicketId}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        // Export data
+        async function exportData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets`);
+                const tickets = await response.json();
+                
+                const dataStr = JSON.stringify(tickets, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                
+                const url = URL.createObjectURL(dataBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `tickets-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert('Failed to export data');
+            }
         }
         
-        // Refresh all data
-        function refreshData() {
-            loadTickets();
+        // Refresh everything
+        async function refreshAll() {
+            const connected = await checkConnection();
+            if (connected) {
+                await Promise.all([loadServers(), loadTickets(), loadStats()]);
+            }
         }
-        
-        // Event listeners
-        document.getElementById('serverSelect').addEventListener('change', loadTickets);
-        document.getElementById('statusFilter').addEventListener('change', loadTickets);
         
         // Initialize
-        loadServers();
-        loadTickets();
-        setInterval(loadTickets, 30000); // Refresh every 30 seconds
+        async function init() {
+            await checkConnection();
+            await refreshAll();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(refreshAll, 30000);
+        }
+        
+        // Start the app
+        init();
     </script>
 </body>
 </html>
