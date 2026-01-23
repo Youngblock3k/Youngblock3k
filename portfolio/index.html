@@ -19,58 +19,36 @@ body{
     color:#fff
 }
 
-.overlay{position:absolute;inset:0;background:rgba(0,0,0,.7)}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.72)}
 
 .hamburger{
-    position:fixed;
-    top:20px;
-    left:20px;
-    width:32px;
-    height:22px;
-    display:flex;
-    flex-direction:column;
+    position:fixed;top:20px;left:20px;
+    width:32px;height:22px;
+    display:flex;flex-direction:column;
     justify-content:space-between;
-    cursor:pointer;
-    z-index:3000
+    cursor:pointer;z-index:3000
 }
-
-.hamburger span{
-    height:3px;
-    width:100%;
-    background:#fff;
-    border-radius:2px;
-    transition:.3s
-}
-
+.hamburger span{height:3px;width:100%;background:#fff;border-radius:2px;transition:.3s}
 .hamburger.active span:nth-child(1){transform:translateY(9px) rotate(45deg)}
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
 
 .sidebar-overlay{
-    position:fixed;
-    inset:0;
+    position:fixed;inset:0;
     background:rgba(0,0,0,.55);
-    opacity:0;
-    pointer-events:none;
-    transition:.3s;
-    z-index:1999
+    opacity:0;pointer-events:none;
+    transition:.3s;z-index:1999
 }
-
 .sidebar-overlay.show{opacity:1;pointer-events:all}
 
 .sidebar{
-    position:fixed;
-    top:0;
-    left:0;
-    width:270px;
-    height:100%;
+    position:fixed;top:0;left:0;
+    width:270px;height:100%;
     background:linear-gradient(180deg,#060b12,#020509);
     transform:translateX(-100%);
     transition:.35s cubic-bezier(.4,0,.2,1);
-    z-index:2000;
-    padding:28px 22px
+    z-index:2000;padding:28px 22px
 }
-
 .sidebar.show{transform:translateX(0)}
 
 .sidebar-profile{text-align:center;margin-bottom:28px}
@@ -82,25 +60,18 @@ body{
 
 .sidebar-menu{display:flex;flex-direction:column;gap:18px}
 .sidebar-menu a{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    color:#d6e1ff;
-    text-decoration:none;
-    font-size:15px;
-    opacity:.9
+    display:flex;align-items:center;gap:14px;
+    color:#d6e1ff;text-decoration:none;
+    font-size:15px;opacity:.9
 }
 .sidebar-menu a:hover{color:#5bbcff}
 
-/* ===== PORTFOLIO CONTENT ===== */
-
+/* CONTENT */
 .content{
     position:absolute;
-    top:50%;
-    left:50%;
+    top:50%;left:50%;
     transform:translate(-50%,-50%);
-    width:900px;
-    max-width:90vw
+    width:1050px;max-width:92vw
 }
 
 .card{
@@ -108,38 +79,43 @@ body{
     backdrop-filter:blur(24px);
     border:1px solid rgba(255,255,255,.25);
     border-radius:28px;
-    padding:36px
+    padding:40px
 }
 
-.title{
-    text-align:center;
-    font-size:34px;
-    margin-bottom:10px
+.title{text-align:center;font-size:36px;margin-bottom:6px}
+.subtitle{text-align:center;opacity:.85;margin-bottom:28px}
+
+.section-title{
+    font-size:22px;
+    margin:30px 0 14px;
+    display:flex;
+    align-items:center;
+    gap:10px
 }
 
-.subtitle{
-    text-align:center;
-    opacity:.85;
-    margin-bottom:30px
+.divider{
+    height:1px;
+    background:linear-gradient(90deg,transparent,#5bbcff,transparent);
+    margin:26px 0
 }
 
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     gap:22px
 }
 
-.project{
+.box{
     background:rgba(0,0,0,.45);
-    border-radius:20px;
-    padding:22px;
+    border-radius:22px;
+    padding:24px;
     border:1px solid rgba(255,255,255,.15)
 }
 
-.project h3{margin:0 0 8px}
-.project p{font-size:14px;opacity:.85}
+.box h3{margin:0 0 8px}
+.box p{font-size:14px;opacity:.88;line-height:1.55}
 
-.tags{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
 .tag{
     font-size:12px;
     padding:6px 10px;
@@ -148,17 +124,17 @@ body{
     color:#9dd1ff
 }
 
-.project a{
+.box a{
     display:block;
-    margin-top:10px;
+    margin-top:12px;
     text-align:center;
     padding:10px;
-    border-radius:12px;
+    border-radius:14px;
     background:#1e293b;
     color:#fff;
     text-decoration:none
 }
-.project a:hover{background:#334155}
+.box a:hover{background:#334155}
 </style>
 </head>
 
@@ -166,10 +142,7 @@ body{
 
 <div class="overlay"></div>
 
-<div class="hamburger" id="hamburger">
-    <span></span><span></span><span></span>
-</div>
-
+<div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="sidebar" id="sidebar">
@@ -183,7 +156,6 @@ body{
         <a href="/Home/portfolio/"><i class="fa-solid fa-briefcase"></i> Portfolio</a>
         <a href="#"><i class="fa-solid fa-code"></i> Skills</a>
         <a href="https://bgsi.ascyt.com"><i class="fa-solid fa-globe"></i> bgsi.gg</a>
-        <a href="https://discord.gg/kwUTdAPevF"><i class="fa-brands fa-discord"></i> Discord</a>
         <a href="https://github.com/Youngblock2k"><i class="fa-brands fa-github"></i> GitHub</a>
     </div>
 </div>
@@ -191,42 +163,72 @@ body{
 <div class="content">
 <div class="card">
 
-    <div class="title">Portfolio</div>
-    <div class="subtitle">Minecraft • Automation • Bots • Web</div>
+<div class="title">Portfolio</div>
+<div class="subtitle">Minecraft • Automation • Bots • Web Systems</div>
 
-    <div class="grid">
+<div class="divider"></div>
 
-        <div class="project">
-            <h3>BGSI.gg</h3>
-            <p>Automation-focused website with tools and clean UI.</p>
-            <div class="tags">
-                <span class="tag">Web</span>
-                <span class="tag">Automation</span>
-            </div>
-            <a href="https://bgsi.ascyt.com">Visit</a>
-        </div>
+<div class="section-title"><i class="fa-solid fa-server"></i> Past Servers I Worked For</div>
 
-        <div class="project">
-            <h3>Voiidsteal Bot</h3>
-            <p>Advanced Discord bot with embeds, AI, and automation.</p>
-            <div class="tags">
-                <span class="tag">Discord</span>
-                <span class="tag">Python</span>
-            </div>
-            <a href="https://discord.gg/kwUTdAPevF">Discord</a>
-        </div>
+<div class="grid">
 
-        <div class="project">
-            <h3>Minecraft SMP Systems</h3>
-            <p>Custom Skript systems, GUIs, shops, pets, automation.</p>
-            <div class="tags">
-                <span class="tag">Minecraft</span>
-                <span class="tag">Skript</span>
-            </div>
-            <a href="https://github.com/Youngblock2k">GitHub</a>
-        </div>
+<div class="box">
+    <h3>Culling — Minecraft Server</h3>
+    <p>
+        A Jujutsu Kaisen–based Minecraft server focused on high-skill combat,
+        deep progression, and strategic PvP/PvE gameplay.
+    </p>
 
+    <div class="tags">
+        <span class="tag">Minecraft</span>
+        <span class="tag">Skript</span>
+        <span class="tag">PvP</span>
+        <span class="tag">Custom Systems</span>
     </div>
+
+    <p>
+        Players begin as initiate sorcerers and progress through quests, PvE bosses,
+        and PvP combat. After level 99, a major trial unlocks the level 150 cap.
+    </p>
+
+    <p>
+        Systems include dynamic leveling, resonance buffs, cursed techniques,
+        custom bosses, and loot-based progression.
+    </p>
+
+    <a href="https://discord.gg/fAxYM4ECzc">Discord (Testing Phase)</a>
+</div>
+
+<div class="box">
+    <h3>VoiidNetwork — Minecraft Server</h3>
+    <p>
+        Network-based Minecraft server with custom gameplay systems,
+        automation, and backend optimizations.
+    </p>
+
+    <div class="tags">
+        <span class="tag">Minecraft</span>
+        <span class="tag">Network</span>
+        <span class="tag">Automation</span>
+    </div>
+</div>
+
+<div class="box">
+    <h3>CloudNetwork — Minecraft Server</h3>
+    <p>
+        Multiplayer server infrastructure focusing on stability,
+        performance, and scalable gameplay systems.
+    </p>
+
+    <div class="tags">
+        <span class="tag">Minecraft</span>
+        <span class="tag">Infrastructure</span>
+        <span class="tag">Systems</span>
+    </div>
+</div>
+
+</div>
+
 </div>
 </div>
 
