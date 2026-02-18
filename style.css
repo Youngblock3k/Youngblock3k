@@ -1209,4 +1209,82 @@ body {
         width: 96vw;
     }
 }
+/* ======================================================
+   MOBILE TOP BUTTON FIXES
+   ====================================================== */
+@media (max-width: 768px) {
+
+    /* Move all top buttons into one bar */
+    .logo-container,
+    .top-right-controls {
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+        z-index: 9999;
+    }
+
+    /* Wrap theme + music to right */
+    .top-right-controls {
+        justify-content: flex-end;
+    }
+
+    /* Make buttons larger for touch */
+    .logo-btn,
+    .music-toggle-btn,
+    .theme-toggle-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+        padding: 0;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Hide text labels on phone */
+    .music-toggle-btn span,
+    .theme-toggle-btn span {
+        display: none;
+    }
+
+    /* Dropdown full width */
+    .music-dropdown,
+    .theme-dropdown {
+        position: fixed;
+        top: 60px;
+        left: 2%;
+        width: 96%;
+        max-height: 70vh;
+        overflow-y: auto;
+        border-radius: 14px;
+    }
+
+    /* Prevent overlap with navbar */
+    .navbar {
+        margin-top: 70px;
+    }
+}
+
+/* Extra small phones */
+@media (max-width: 420px) {
+
+    .logo-btn,
+    .music-toggle-btn,
+    .theme-toggle-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .music-dropdown,
+    .theme-dropdown {
+        top: 55px;
+    }
+}
 
