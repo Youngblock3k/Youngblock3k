@@ -9,12 +9,69 @@
 </head>
 <body>
     <div class="overlay"></div>
-    
+
     <!-- Logo/Home Button Top Left -->
     <div class="logo-container">
-        <a href="https://youngblock3k.github.io/Home/#" class="logo-btn" title="Back to Home">
+        <a href="#home" class="logo-btn" title="Back to Home">
             <i class="fas fa-home"></i>
         </a>
+    </div>
+
+    <!-- Top Right Controls -->
+    <div class="top-right-controls">
+
+        <!-- Music Player -->
+        <div class="music-container">
+            <button class="music-toggle-btn" id="musicToggleBtn" title="Music Player">
+                <i class="fas fa-music"></i>
+                <span id="musicLabel">Music</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="music-dropdown" id="musicDropdown">
+
+                <!-- Now Playing -->
+                <div class="music-now-playing">
+                    <div class="music-icon-wrap"><i class="fas fa-music"></i></div>
+                    <div class="music-info">
+                        <span class="music-track-name" id="musicTrackName">No track loaded</span>
+                        <span class="music-track-status" id="musicTrackStatus">Stopped</span>
+                    </div>
+                </div>
+
+                <!-- Controls row: prev | play/pause | next -->
+                <div class="music-controls-row">
+                    <button class="music-ctrl-btn" id="musicPrev"><i class="fas fa-step-backward"></i></button>
+                    <button class="music-ctrl-btn music-ctrl-play" id="musicPlay"><i class="fas fa-play"></i></button>
+                    <button class="music-ctrl-btn" id="musicNext"><i class="fas fa-step-forward"></i></button>
+                </div>
+
+                <!-- Volume row -->
+                <div class="music-vol-row">
+                    <i class="fas fa-volume-down music-vol-icon"></i>
+                    <input type="range" id="musicVolume" class="music-vol-slider" min="0" max="100" value="60">
+                    <i class="fas fa-volume-up music-vol-icon"></i>
+                </div>
+
+                <!-- Playlist — same style as theme options -->
+                <div class="music-playlist-list" id="musicPlaylist">
+                    <!-- injected by JS -->
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Theme Switcher -->
+        <div class="theme-switcher-container">
+            <button class="theme-toggle-btn" id="themeToggleBtn" title="Change Theme">
+                <i class="fas fa-palette"></i>
+                <span id="themeLabel">Fox Theme</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="theme-dropdown" id="themeDropdown">
+                <!-- injected by JS -->
+            </div>
+        </div>
+
     </div>
 
     <!-- Navigation -->
@@ -24,10 +81,12 @@
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
         <a href="#work">Work</a>
+        <a href="#store">🛒 Store</a>
         <a href="#contact">Contact</a>
     </nav>
 
     <div class="container">
+
         <!-- Home Section -->
         <section id="home" class="section hero-section">
             <div class="card hero-card">
@@ -40,6 +99,7 @@
                 <p class="bio" id="bio">Developer focused on Minecraft servers, scripting, automation, and game systems.</p>
                 <div class="cta-buttons">
                     <a href="#projects" class="btn btn-primary">View My Work</a>
+                    <a href="#store" class="btn btn-store">🛒 Visit Store</a>
                     <a href="#contact" class="btn btn-secondary">Get In Touch</a>
                 </div>
             </div>
@@ -50,7 +110,7 @@
             <h2>About Me</h2>
             <div class="card">
                 <div class="about-content">
-                    <p><strong>Age:</strong> 17 years old</p>
+                    <p><strong>Age:</strong> 15 years old</p>
                     <p><strong>Role:</strong> Game Developer & Backend Engineer</p>
                     <p><strong>Location:</strong> Oslo, Norway</p>
                     <p><strong>Specialization:</strong> Minecraft server development, automation systems, and Discord bot creation</p>
@@ -110,7 +170,7 @@
         <section id="projects" class="section">
             <h2>Featured Projects</h2>
             <div class="projects-grid" id="projectsContainer">
-                <!-- Projects will be populated here by JavaScript -->
+                <!-- populated by JS -->
             </div>
         </section>
 
@@ -138,32 +198,18 @@
                             </ul>
                         </div>
                     </div>
-
                     <div class="work-panel" id="screenshots-panel">
                         <div class="card">
                             <h3><i class="fas fa-images"></i> Project Screenshots</h3>
                             <p>Visual showcase of server builds and custom systems:</p>
                             <div class="placeholder-grid">
-                                <div class="placeholder-item">
-                                    <i class="fas fa-image"></i>
-                                    <p>Culling Server Showcase</p>
-                                </div>
-                                <div class="placeholder-item">
-                                    <i class="fas fa-image"></i>
-                                    <p>Dirtbox Network</p>
-                                </div>
-                                <div class="placeholder-item">
-                                    <i class="fas fa-image"></i>
-                                    <p>Custom Game Modes</p>
-                                </div>
-                                <div class="placeholder-item">
-                                    <i class="fas fa-image"></i>
-                                    <p>Game UI Design</p>
-                                </div>
+                                <div class="placeholder-item"><i class="fas fa-image"></i><p>Culling Server Showcase</p></div>
+                                <div class="placeholder-item"><i class="fas fa-image"></i><p>Dirtbox Network</p></div>
+                                <div class="placeholder-item"><i class="fas fa-image"></i><p>Custom Game Modes</p></div>
+                                <div class="placeholder-item"><i class="fas fa-image"></i><p>Game UI Design</p></div>
                             </div>
                         </div>
                     </div>
-
                     <div class="work-panel" id="videos-panel">
                         <div class="card">
                             <h3><i class="fas fa-video"></i> Featured Work</h3>
@@ -191,6 +237,22 @@
             </div>
         </section>
 
+        <!-- Store Section -->
+        <section id="store" class="section">
+            <h2>Skript Packages</h2>
+            <p class="store-intro">Professional Skript packages for every server size — from small testing environments to full custom gamemodes.</p>
+            <div class="store-packages" id="storePackages">
+                <!-- populated by JS -->
+            </div>
+            <div class="store-contact-banner">
+                <h3>Get in Touch</h3>
+                <p>Want a custom skript or package? Contact me via Discord:</p>
+                <a href="https://discord.com/users/justanother_game" target="_blank" class="btn btn-discord">
+                    <i class="fab fa-discord"></i> My Discord
+                </a>
+            </div>
+        </section>
+
         <!-- Contact Section -->
         <section id="contact" class="section">
             <h2>Get In Touch</h2>
@@ -200,7 +262,7 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h3>Email</h3>
-                            <a href="mailto:justanothergame04@gmail.com">justanothergame04@gmail.com</a>
+                            <a href="mailto:just_anothergame04@gmail.com">just_anothergame04@gmail.com</a>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -221,6 +283,7 @@
         <footer class="footer">
             <p>&copy; 2026 Justanother_game. All rights reserved.</p>
         </footer>
+
     </div>
 
     <script src="config.js"></script>
