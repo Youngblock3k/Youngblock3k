@@ -5,7 +5,7 @@
 //    { name: "Lofi Study", src: "music/lofi.mp3" },
 // ============================================================
 const MUSIC_TRACKS = [
-    { name: "Lofi Study", src: "home/musics/lofi.mp3" },
+    { name: "Lofi Study", src: "musics/lofi.mp3" },
     // { name: "Winter Vibes", src: "music/winter.mp3" },
     // { name: "Fox Theme",    src: "music/fox.mp3"    },
 ];
@@ -144,3 +144,4 @@ const DATA = {
         }
     ]
 };
+
